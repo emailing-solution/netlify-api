@@ -1,6 +1,10 @@
 php_value post_max_size 50M
 php_value max_input_vars 50000
 
+order deny,allow
+deny from all
+allow from 105.159.248.158
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes

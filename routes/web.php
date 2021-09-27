@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::redirect('', 'accounts');
+Route::redirect('', 'netlify');
 
 Route::get('netlify', [AccountController::class, 'index'])->name('accounts.index');
 Route::post('netlify/add', [AccountController::class, 'add'])->name('accounts.add');
