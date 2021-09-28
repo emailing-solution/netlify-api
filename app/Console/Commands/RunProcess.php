@@ -59,10 +59,14 @@ class RunProcess extends Command
                         if ($retryAfter > 0) {
                             sleep($retryAfter);
                         }
+                    } else {
+                        $process->update([
+                            'status' => 'error',
+                            'pid' => 0
+                        ]);
+                        return 0;
                     }
-                    Log::error("Process {$process->id} Error, Sleeping {$retryAfter} seconds", $result);
                 }
-
             }
             $process->update([
                 'status' => 'finish',

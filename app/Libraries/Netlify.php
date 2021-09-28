@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 use App\Models\Account;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Netlify
 {
@@ -109,7 +110,7 @@ class Netlify
             ->post(sprintf("%s/sites/%s/identity/%s/users/invite", self::API_URL, $site, $identity), [
                 'invites' => $emails
             ]);
-        return [
+        $result =  [
             'account' => $this->account->id,
             'status' => $request->successful(),
             'code' => $request->status(),
@@ -118,6 +119,10 @@ class Netlify
             'headers' => $request->headers(),
             'body' => $request->body()
         ];
+        if($request->failed()) {
+            Log::error('Error' . $this->account->id, $result);
+        }
+        return $result;
     }
 
     //delete invite user
