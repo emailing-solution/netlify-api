@@ -74,8 +74,8 @@
                             .replace(':iden', data.identity_instance_id)
 
                         const process = `<a href="${process_link}" title="create process" target="_blank">CREATE PROCESS</a> | `;
-                        const url = `<a href="${row.ssl_url}" title="visit link" target="_blank">VISIT SITE</a> | `;
-                        const visit = `<a href="${visit_url}" title="invite users" target="_blank">MANAGE IDENTITY</a>`
+                        const url = `<a href="${row.ssl_url}" title="visit site" target="_blank">VISIT SITE</a> | `;
+                        const visit = `<a href="${visit_url}" title="manage identity" target="_blank">MANAGE IDENTITY</a>`
 
                         return process + url + visit;
                     }

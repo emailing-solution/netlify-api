@@ -103,13 +103,21 @@ class Netlify
     }
 
     //invite identity users
-    public function inviteIdentity(string $site, string $identity, array $emails): bool
+    public function inviteIdentity(string $site, string $identity, array $emails): array
     {
         $request = Http::asJson()->withToken($this->account->token)
             ->post(sprintf("%s/sites/%s/identity/%s/users/invite", self::API_URL, $site, $identity), [
                 'invites' => $emails
             ]);
-        return $request->successful();
+        return [
+            'account' => $this->account->id,
+            'status' => $request->successful(),
+            'code' => $request->status(),
+            'left' => $request->header('X-Ratelimit-Remaining'),
+            'reset_at' => $request->header('X-Ratelimit-Reset'),
+            'headers' => $request->headers(),
+            'body' => $request->body()
+        ];
     }
 
     //delete invite user

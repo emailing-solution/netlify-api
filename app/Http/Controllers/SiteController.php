@@ -107,7 +107,7 @@ class SiteController extends Controller
 
                 if (!empty($emails)) {
                     $result = $netlify->inviteIdentity($site, $identity, $emails);
-                    if ($result) {
+                    if ($result['status']) {
                         $response = response()->json(['data' => 'Added Successfully']);
                         break;
                     }

@@ -56,7 +56,7 @@ class MyProcessController extends Controller
             'site_id' => $site,
             'identity_id' => $identity,
             'emails' => $emails,
-            'status' => 'running',
+            'status' => 'starting',
             'pid' => 0,
             'split_by' => $split,
             'delay_by' => $delay,
