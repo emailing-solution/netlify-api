@@ -44,12 +44,12 @@
         const columns = [
             {title: "#", data: "id", className: "text-center"},
             {title: "user", data: "user.username", searchable: false, className: "text-center"},
-            {title: "status", data: "status", className: "text-center"},
-            {title: "pid", data: "pid", className: "text-center"},
             {title: "split by", data: "split_by", className: "text-center"},
             {title: "delay by", data: "delay_by", className: "text-center"},
             {title: "total sent", data: "total_sent", className: "text-center"},
             {title: "total emails", data: "total_emails", className: "text-center"},
+            {title: "pid", data: "pid", className: "text-center"},
+            {title: "status", data: "status", className: "text-center"},
             {
                 title: "action",
                 data: null,

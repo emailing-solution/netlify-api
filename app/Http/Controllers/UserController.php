@@ -13,7 +13,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return datatables()->of(User::withCount('accounts'))->toJson();
+            return datatables()->of(User::withCount(['accounts', 'processes']))->toJson();
         }
         return view('users');
     }

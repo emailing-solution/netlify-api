@@ -52,7 +52,8 @@
             {title: "name", data: "name", className: "text-center"},
             {title: "username", data: "username", className: "text-center"},
             {title: "type", data: "type", className: "text-center"},
-            {title: "total accounts", data: "accounts_count", className: "text-center", searchable: false},
+            {title: "total accounts added", data: "accounts_count", className: "text-center", searchable: false},
+            {title: "total processes created", data: "processes_count", className: "text-center", searchable: false},
             {
                 title: "action",
                 data: null,
