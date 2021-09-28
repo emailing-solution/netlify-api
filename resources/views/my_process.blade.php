@@ -50,6 +50,14 @@
             {title: "total emails", data: "total_emails", className: "text-center"},
             {title: "status", data: "status", className: "text-center"},
             {title: "pid", data: "pid", className: "text-center"},
+            {title: "created at", data: "created_at", className: "text-center", render: function(data) {
+                    return (new Date(data)).toLocaleString()
+                }
+            },
+            {title: "updated at", data: "updated_at", className: "text-center", render: function(data) {
+                    return (new Date(data)).toLocaleString()
+                }
+            },
             {
                 title: "action",
                 data: null,
@@ -108,5 +116,9 @@
                 });
             }
         });
+
+        window.setInterval(function(){
+            table.ajax.reload(null, false);
+        }, 60 * 1000);
     </script>
 @endsection

@@ -19,7 +19,7 @@ class MyProcessController extends Controller
                 ->select([
                     'id', 'status', 'pid', 'split_by', 'delay_by',
                     'total_sent', 'total_emails', 'account_id',
-                    'user_id'
+                    'user_id', 'created_at', 'updated_at'
                 ]);
             return datatables()->of($processes)->toJson();
         }
