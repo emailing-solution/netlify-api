@@ -86,6 +86,10 @@
                     $(row).addClass("table-success");
                     return row;
                 }
+                if (data.status === "error") {
+                    $(row).addClass("table-danger");
+                    return row;
+                }
             }
         }).on("click", ".kill", function (e) {
             e.preventDefault();
