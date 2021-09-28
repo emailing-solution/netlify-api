@@ -28,12 +28,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string'],
-            'username' => ['required', 'string', Rule::unique('users', 'username')->ignoreModel($user)],
             'password' => [Rule::requiredIf(empty($user))],
             'type' => ['required', 'string', 'in:mailer,admin'],
         ]);
 
         if (is_null($user)) {
+            $request->validate([
+                'username' => ['required', 'string', Rule::unique('users', 'username')],
+            ]);
             $result = User::create([
                 'name' => $request->name,
                 'username' => $request->username,
@@ -47,6 +49,9 @@ class UserController extends Controller
                 ]);
             }
         } else {
+            $request->validate([
+                'username' => ['required', 'string', Rule::unique('users', 'username')->ignoreModel($user)],
+            ]);
             $data = [
                 'name' => $request->name,
                 'username' => $request->username,
