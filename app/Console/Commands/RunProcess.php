@@ -55,7 +55,7 @@ class RunProcess extends Command
                     sleep($process->delay_by);
                 } else {
                     if($result['code'] == 429) {
-                        $retryAfter = now()->diffInSeconds(Carbon::parse($result['reset_at']), false);
+                        $retryAfter = now()->diffInSeconds(Carbon::createFromTimestamp($result['reset_at']), false);
                         if ($retryAfter > 0) {
                             sleep($retryAfter);
                         }
