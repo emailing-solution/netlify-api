@@ -48,8 +48,8 @@
             {title: "delay by", data: "delay_by", className: "text-center"},
             {title: "total sent", data: "total_sent", className: "text-center"},
             {title: "total emails", data: "total_emails", className: "text-center"},
-            {title: "pid", data: "pid", className: "text-center"},
             {title: "status", data: "status", className: "text-center"},
+            {title: "pid", data: "pid", className: "text-center"},
             {
                 title: "action",
                 data: null,
