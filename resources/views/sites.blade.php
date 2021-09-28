@@ -83,7 +83,7 @@
             ];
 
             $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-default border';
-            if ($.fn.DataTable.isDataTable('#lists')) {
+            if ($.fn.DataTable.isDataTable('#sites')) {
                 $('#sites').DataTable().clear().destroy();
             }
             const table = $("#sites").DataTable({

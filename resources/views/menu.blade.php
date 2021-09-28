@@ -23,7 +23,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('sites.index') }}">
+                <a class="nav-link" href="{{ route('process.index') }}">
                     <span data-feather="code"></span>
                     MY PROCESS
                 </a>

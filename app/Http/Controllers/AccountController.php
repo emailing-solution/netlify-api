@@ -52,7 +52,7 @@ class AccountController extends Controller
 
     public function delete(Account $account): JsonResponse
     {
-        Gate::authorize('account_allowed', $account);
+        Gate::authorize('is_admin');
         return response()->json([
             'status' => $account->delete()
         ]);
