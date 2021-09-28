@@ -8,6 +8,7 @@
     <title>@yield('title')</title>
     <!-- Bootstrap core CSS -->
     <link href="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
     <meta name="theme-color" content="#563d7c">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
@@ -131,6 +132,11 @@
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{{ route('login.logout') }}">LOGOUT</a>
+        </li>
+    </ul>
 </nav>
 
 <div class="container-fluid">

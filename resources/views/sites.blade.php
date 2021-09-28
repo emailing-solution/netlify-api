@@ -68,10 +68,16 @@
                             .replace(':id', data.id)
                             .replace(':iden', data.identity_instance_id)
 
-                        const url = `<a href="${row.ssl_url}" title="visit link" target="_blank">VISIT SITE</a> | `;
-                        const visit = `<a href="${visit_url}" title="invite users" target="_blank">INVITE USERS</a>`
+                        const process_link = "{{ route('process.get', [':acc', ':id', ':iden']) }}"
+                            .replace(':acc', $("#accounts").val())
+                            .replace(':id', data.id)
+                            .replace(':iden', data.identity_instance_id)
 
-                        return url + visit;
+                        const process = `<a href="${process_link}" title="create process" target="_blank">CREATE PROCESS</a> | `;
+                        const url = `<a href="${row.ssl_url}" title="visit link" target="_blank">VISIT SITE</a> | `;
+                        const visit = `<a href="${visit_url}" title="invite users" target="_blank">MANAGE IDENTITY</a>`
+
+                        return process + url + visit;
                     }
                 },
             ];

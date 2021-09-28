@@ -9,7 +9,6 @@
 @section('css')
     <link rel="stylesheet" type="text/css"
           href="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.5/r-2.2.6/sl-1.3.1/datatables.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 @endsection
 
 @section('body')

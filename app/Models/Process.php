@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Account extends Model
+class Process extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'emails' => 'array'
+    ];
 
     protected $guarded = [];
 
@@ -18,8 +21,8 @@ class Account extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function processes(): HasMany
+    public function account(): BelongsTo
     {
-        return $this->hasMany(Process::class);
+        return $this->belongsTo(Account::class);
     }
 }

@@ -7,18 +7,22 @@ use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class SiteController extends Controller
 {
     public function index()
     {
         return view('sites', [
-            'accounts' => Account::where('is_active', true)->get(['id', 'name'])
+            'accounts' => Account::where('is_active', true)
+                ->when(Gate::allows('is_mailer'), fn($q) => $q->where('user_id', auth()->id()))
+                ->get(['id', 'name'])
         ]);
     }
 
     public function sites(Account $account): JsonResponse
     {
+        Gate::authorize('account_allowed', $account);
         $netlify = new Netlify($account);
 
         $sites = $netlify->sites();
@@ -33,6 +37,7 @@ class SiteController extends Controller
 
     public function identity(Account $account, string $site, string $identity, Request $request)
     {
+        Gate::authorize('account_allowed', $account);
         if ($request->ajax()) {
             $netlify = new Netlify($account);
             if ($request->t == 'u') {
@@ -60,6 +65,7 @@ class SiteController extends Controller
 
     public function identityActions(Account $account, string $site, string $identity, Request $request): JsonResponse
     {
+        Gate::authorize('account_allowed', $account);
         $request->validate([
             'action' => 'required|string'
         ]);

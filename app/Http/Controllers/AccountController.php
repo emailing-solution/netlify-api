@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AccountController extends Controller
 {
     public function index(Request $request)
     {
         if($request->ajax()) {
-            return datatables()->of(Account::query())->toJson();
+            $accounts = Account::query()->when(Gate::allows('is_mailer'), fn($q) => $q->where('user_id', auth()->id()));
+            return datatables()->of($accounts)->toJson();
         }
         return view('accounts');
     }
@@ -26,7 +28,8 @@ class AccountController extends Controller
         $res = Account::create([
             'name' => $request->name,
             'token' => $request->token,
-            'is_active' => true
+            'is_active' => true,
+            'user_id' => auth()->id()
         ]);
 
         return response()->json([
@@ -36,11 +39,12 @@ class AccountController extends Controller
 
     public function status(Account $account, Request $request): JsonResponse
     {
+        Gate::authorize('account_allowed', $account);
         $request->validate([
             'status' => ['required', 'boolean']
         ]);
 
-        $result = $account->fill(['is_active' => $request->status])->save();
+        $result = $account->update(['is_active' => $request->status]);
         return response()->json([
             'status' => $result
         ]);
@@ -48,6 +52,7 @@ class AccountController extends Controller
 
     public function delete(Account $account): JsonResponse
     {
+        Gate::authorize('account_allowed', $account);
         return response()->json([
             'status' => $account->delete()
         ]);

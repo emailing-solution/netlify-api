@@ -18,6 +18,7 @@ class CreateAccountsTable extends Migration
             $table->string('name', 255);
             $table->string('token', 255);
             $table->boolean('is_active')->default(true);
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
