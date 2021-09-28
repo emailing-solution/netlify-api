@@ -83,6 +83,7 @@ class MyProcessController extends Controller
 
     public function kill(Process $process): JsonResponse
     {
+        Gate::authorize('process_allowed', $process);
         $pro = BackgroundProcess::createFromPID($process->pid);
         if ($pro->isRunning()) {
             $pro->stop();

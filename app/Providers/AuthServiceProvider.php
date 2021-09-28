@@ -28,5 +28,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is_admin', fn($user) => $user->type === 'admin');
         Gate::define('is_mailer', fn($user) => $user->type === 'mailer');
         Gate::define('account_allowed', fn($user, $account) => $user->type === 'admin' || $user->id === $account->user_id);
+        Gate::define('process_allowed', fn($user, $process) => $user->type === 'admin' || $user->id === $process->user_id);
     }
 }
