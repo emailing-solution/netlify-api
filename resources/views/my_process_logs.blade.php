@@ -20,88 +20,12 @@
 @section('script')
     <script>
         const jsonToHtml = function (json) {
-            let _options = {
-                container: 'div',
-                formatContainer: function formatContainer(container) {
-                    container.className = 'container'
-                    return container
-                }
-                ,
-                formatUl: function formatUl(ul) {
-                    ul.className = ''
-                    return ul
-                },
-                formatLi: function formatLi(li) {
-                    li.className = ''
-                    return li
-                },
-                formatProperty: function formatProperty(val) {
-                    const strong = document.createElement('strong')
-                    strong.appendChild(val)
-                    return strong
-                },
-                formatValue: function formatValue(val) {
-                    let span = document.createElement('span');
-                    span.appendChild(val);
-                    return span;
-                }
-            }
-            let container = document.createElement(_options.container)
-            container = _options.formatContainer(container)
-
-            function walk(obj, parentElm) {
-                if (typeof (obj) === 'object' && obj !== null && obj.constructor === Object) {
-                    let ul = document.createElement('ul')
-                    ul = _options.formatUl(ul)
-                    // eslint-disable-next-line no-unused-vars
-                    let hasCount = 0
-                    for (let prop in obj) {
-                        // eslint-disable-next-line no-prototype-builtins
-                        if (obj.hasOwnProperty(prop)) {
-                            let li = document.createElement('li')
-                            li = _options.formatLi(li)
-                            ul.appendChild(li)
-                            if (typeof (obj[prop]) !== 'object' || obj[prop] === null) {
-                                let propText = document.createTextNode(prop + ' :')
-                                propText = _options.formatProperty(propText)
-                                li.appendChild(propText)
-                                let valueText = document.createTextNode(' ' + obj[prop])
-                                valueText = _options.formatValue(valueText, prop)
-                                li.appendChild(valueText)
-                                hasCount++
-                            } else {
-                                let propText = document.createTextNode(prop)
-                                propText = _options.formatProperty(propText)
-                                li.appendChild(propText)
-                                walk(obj[prop], li)
-                            }
-                        }
-                    }
-                    parentElm.appendChild(ul)
-                } else if (typeof (obj) === 'object' && obj !== null && obj.constructor === Array) {
-                    let ul = document.createElement('ul')
-                    ul = _options.formatUl(ul)
-                    // eslint-disable-next-line no-unused-vars
-                    let hasCount = 0
-                    for (let i = 0; i < obj.length; i++) {
-                        if (typeof (obj[i]) !== 'object' || obj[i] === null) {
-                            let li = document.createElement('li')
-                            li = _options.formatLi(li)
-                            ul.appendChild(li)
-                            let valueText = document.createTextNode(obj[i])
-                            valueText = _options.formatValue(valueText, i)
-                            li.appendChild(valueText)
-                            hasCount++
-                        } else {
-                            walk(obj[i], parentElm)
-                        }
-                    }
-                    parentElm.appendChild(ul)
-                }
-            }
-
-            walk(json, container)
-            return container.innerHTML
+            let list =  '<ul>';
+            $.each(json, function(key, value) {
+                list+= `<li><strong>${key}: </strong>${JSON.stringify(value)}</li>`;
+            });
+            list += '</ul>';
+            return list;
         }
 
         const buttons = [
@@ -123,6 +47,7 @@
                 title: "headers", data: "headers", className: "text-center", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
                     const headers = JSON.parse(dataDecoded);
+                    console.log(headers);
                     return jsonToHtml(headers);
                 }
             },
