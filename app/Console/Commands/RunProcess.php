@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Libraries\Netlify;
 use App\Models\Process;
+use App\Models\ProcessLog;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -49,17 +50,33 @@ class RunProcess extends Command
             foreach ($groupEmails as $emails) {
                 $toSend = $emails->map(fn($e) => ['email' => $e]);
                 $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
+                $this->comment("Try Sending  : ". $toSend->count());
                 if($result['status']) {
+                    $this->comment("Sent With Success ". $toSend->count());
                     $total = $total + $toSend->count();
                     $process->update(['total_sent' => $total]);
                     sleep($process->delay_by);
                 } else {
+                    $retryAfter = now()->diffInSeconds(Carbon::createFromTimestamp($result['reset_at']), false);
+                    $datetime = now()->addSeconds($retryAfter);
+                    ProcessLog::add(
+                        json_encode($result['headers']),
+                        $result['body'],
+                        (int)$result['limit'],
+                        (int)$result['left'],
+                        $datetime,
+                        $process->id
+                    );
+                    $this->error("FAILED");
                     if($result['code'] == 429) {
-                        $retryAfter = now()->diffInSeconds(Carbon::createFromTimestamp($result['reset_at']), false);
+                        $this->comment("API RATE LIMITED");
                         if ($retryAfter > 0) {
+                            $process->update(['status' => 'rate limit, sleeping until ' . $datetime->toDateTimeString()]);
+                            $this->error("sleeping for $retryAfter seconds");
                             sleep($retryAfter);
                         }
                     } else {
+                        $this->error("KILLING PROCESS");
                         $process->update([
                             'status' => 'error',
                             'pid' => 0

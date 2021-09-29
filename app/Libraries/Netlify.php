@@ -3,6 +3,8 @@
 namespace App\Libraries;
 
 use App\Models\Account;
+use App\Models\ProcessLog;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -114,6 +116,7 @@ class Netlify
             'account' => $this->account->id,
             'status' => $request->successful(),
             'code' => $request->status(),
+            'limit' => $request->header('X-Ratelimit-Limit'),
             'left' => $request->header('X-Ratelimit-Remaining'),
             'reset_at' => $request->header('X-Ratelimit-Reset'),
             'headers' => $request->headers(),
