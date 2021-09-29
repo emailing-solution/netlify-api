@@ -33,14 +33,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('users/make/{user?}', [UserController::class, 'add'])->name('users.add');
         Route::patch('users/{user}', [UserController::class, 'status'])->name('users.status');
         Route::delete('users/{user}', [UserController::class, 'delete'])->name('users.delete');
-
-
     });
 
     Route::get('netlify', [AccountController::class, 'index'])->name('accounts.index');
     Route::post('netlify/add', [AccountController::class, 'add'])->name('accounts.add');
-    Route::patch('apis/status/{account}', [AccountController::class, 'status'])->name('accounts.status');
-    Route::delete('apis/delete/{account}', [AccountController::class, 'delete'])->name('accounts.delete');
+    Route::get('netlify/check/{account}', [AccountController::class, 'check'])->name('accounts.check');
+    Route::patch('netlify/status/{account}', [AccountController::class, 'status'])->name('accounts.status');
+    Route::delete('netlify/delete/{account}', [AccountController::class, 'delete'])->name('accounts.delete');
 
     Route::get('sites', [SiteController::class, 'index'])->name('sites.index');
     Route::get('sites/{account}', [SiteController::class, 'sites'])->name('sites.load');
@@ -48,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('sites/{account}/{site}/{identity}', [SiteController::class, 'identityActions'])->name('sites.action');
 
     Route::get('my-process', [MyProcessController::class, 'index'])->name('process.index');
+    Route::get('my-process/logs/{account}', [MyProcessController::class, 'logs'])->name('process.logs');
     Route::delete('my-process/kill/{process}', [MyProcessController::class, 'kill'])->name('process.kill');
     Route::get('my-process/create/{account}/{site}/{identity}', [MyProcessController::class, 'get'])->name('process.get');
     Route::post('my-process/create/{account}/{site}/{identity}', [MyProcessController::class, 'create'])->name('process.create');

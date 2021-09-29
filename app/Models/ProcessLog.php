@@ -14,6 +14,10 @@ class ProcessLog extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'retry_at' => 'datetime'
+    ];
+
     public function process(): BelongsTo
     {
         return $this->belongsTo(Process::class);
@@ -27,7 +31,7 @@ class ProcessLog extends Model
     public static function add(string $headers, string $body, int $limit, int $left, Carbon $retry_at, int $process_id)
     {
         return self::create([
-            'header' => $headers,
+            'headers' => $headers,
             'body' => $body,
             'total_limit' => $limit,
             'total_left' => $left,

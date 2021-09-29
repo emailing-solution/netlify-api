@@ -6,12 +6,6 @@
     @include('menu')
 @endsection
 
-@section('css')
-    <link rel="stylesheet" type="text/css"
-          href="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.5/r-2.2.6/sl-1.3.1/datatables.min.css"/>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-@endsection
-
 @section('body')
     <div class="row">
         <div class="col-sm-12">
@@ -41,8 +35,6 @@
 @endsection
 
 @section('script')
-    <script src="//cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.5/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script>
 
         const load_sites = (data) => {

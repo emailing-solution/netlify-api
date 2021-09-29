@@ -6,11 +6,6 @@
     @include('menu')
 @endsection
 
-@section('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.5/r-2.2.6/sl-1.3.1/datatables.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-@endsection
-
 @section('body')
     <div class="row">
         <div class="col-sm-12">
@@ -38,9 +33,6 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript"
-            src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.5/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script>
         const buttons = [
             {
@@ -65,9 +57,10 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
+                    const check = `<button data-id="${row.id}" class="btn btn-sm btn-info check">CHECK API LIMIT</button>&nbsp;`;
                     const status = `<button data-id="${row.id}" data-action="${!row.is_active ? 1 : 0}" class="btn btn-sm btn-warning status">${row.is_active ? 'DISABLE' : 'ENABLE'}</button>&nbsp;`;
                     const del = `<button data-id="${row.id}" class="btn btn-sm btn-danger del">DELETE</button>&nbsp;`;
-                    return status + del;
+                    return check + status + del;
                 }
             },
         ];
@@ -95,6 +88,24 @@
                     return row;
                 }
             }
+        }).on("click", ".check", function (e) {
+            e.preventDefault();
+            const btn = this;
+            const id = $(btn).data('id');
+            $(btn).attr("disabled", true);
+            $.ajax({
+                url: '{{ route('accounts.check', ':id') }}'.replace(':id', id),
+                type: "get",
+                dataType: "json",
+            }).done(function (res) {
+                Swal.fire({
+                    icon: res.status,
+                    title: res.status,
+                    text: res.body,
+                });
+            }).always(function () {
+                $(btn).attr("disabled", false);
+            });
         }).on("click", ".status", function (e) {
             e.preventDefault();
             const btn = this;
@@ -117,7 +128,7 @@
             e.preventDefault();
             const btn = this;
             const id = $(btn).data('id');
-            if(confirm('Are You Sure ?')) {
+            if (confirm('Are You Sure ?')) {
                 $(btn).attr("disabled", true);
                 $.ajax({
                     url: '{{ route('accounts.delete', ':id') }}'.replace(':id', id),

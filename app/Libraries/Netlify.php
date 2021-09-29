@@ -3,7 +3,6 @@
 namespace App\Libraries;
 
 use App\Models\Account;
-use App\Models\ProcessLog;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -31,14 +30,17 @@ class Netlify
     }
 
     //get accounts
-    public function accounts()
+    public function accounts(): array
     {
         $request = Http::asJson()->withToken($this->account->token)
             ->get(self::API_URL . "/accounts");
-        if ($request->successful()) {
-            return $request->json();
-        }
-        return false;
+        return [
+            'status' => $request->successful(),
+            'limit' => $request->header('X-Ratelimit-Limit'),
+            'left' => $request->header('X-Ratelimit-Remaining'),
+            'reset_at' => $this->parseResetTime($request->header('X-Ratelimit-Reset')),
+            'data' => $request->json()
+        ];
     }
 
     //get sites
@@ -112,18 +114,18 @@ class Netlify
             ->post(sprintf("%s/sites/%s/identity/%s/users/invite", self::API_URL, $site, $identity), [
                 'invites' => $emails
             ]);
-        $result =  [
+        $result = [
             'account' => $this->account->id,
             'status' => $request->successful(),
             'code' => $request->status(),
             'limit' => $request->header('X-Ratelimit-Limit'),
             'left' => $request->header('X-Ratelimit-Remaining'),
-            'reset_at' => $request->header('X-Ratelimit-Reset'),
+            'reset_at' => $this->parseResetTime($request->header('X-Ratelimit-Reset')),
             'headers' => $request->headers(),
             'body' => $request->body()
         ];
-        if($request->failed()) {
-            Log::error('Error' . $this->account->id, $result);
+        if ($request->failed()) {
+            Log::error('Error invites account ' . $this->account->id, $result);
         }
         return $result;
     }
@@ -135,4 +137,21 @@ class Netlify
             ->delete(sprintf("%s/sites/%s/identity/%s/users/%s", self::API_URL, $site, $identity, $userId));
         return $request->successful();
     }
+
+    private function isValidTimeStamp($timestamp): bool
+    {
+        return ((string) (int) $timestamp === $timestamp)
+            && ($timestamp <= PHP_INT_MAX)
+            && ($timestamp >= ~PHP_INT_MAX);
+    }
+
+    private function parseResetTime($time): Carbon
+    {
+        if($this->isValidTimeStamp($time)) {
+            return Carbon::createFromTimestamp($time);
+        }
+        return Carbon::parse($time);
+    }
+
+
 }

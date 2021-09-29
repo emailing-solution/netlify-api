@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\Netlify;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 
 class AccountController extends Controller
@@ -35,6 +37,23 @@ class AccountController extends Controller
         return response()->json([
             'status' => $res,
         ]);
+    }
+
+    public function check(Account $account): JsonResponse
+    {
+        Gate::authorize('account_allowed', $account);
+        $netfliy = new Netlify($account);
+        $result = $netfliy->accounts();
+        $body = sprintf("Your Limit :  %s - Left : %s - Reset At : %s",
+            $result['limit'],
+            $result['left'],
+            $result['reset_at']->toDateTimeString()
+        );
+        return response()->json([
+            'status' => $result['status'] ? 'success' : 'failed',
+            'body' => $body,
+        ]);
+
     }
 
     public function status(Account $account, Request $request): JsonResponse

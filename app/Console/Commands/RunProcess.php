@@ -49,15 +49,16 @@ class RunProcess extends Command
             $netlify = new Netlify($process->account);
             foreach ($groupEmails as $emails) {
                 $toSend = $emails->map(fn($e) => ['email' => $e]);
-                $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
                 $this->comment("Try Sending  : ". $toSend->count());
+                $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
                 if($result['status']) {
                     $this->comment("Sent With Success ". $toSend->count());
                     $total = $total + $toSend->count();
                     $process->update(['total_sent' => $total]);
                     sleep($process->delay_by);
                 } else {
-                    $retryAfter = now()->diffInSeconds(Carbon::createFromTimestamp($result['reset_at']), false);
+                    $this->error("FAILED");
+                    $retryAfter = now()->diffInSeconds($result['reset_at'], false);
                     $datetime = now()->addSeconds($retryAfter);
                     ProcessLog::add(
                         json_encode($result['headers']),
@@ -67,7 +68,6 @@ class RunProcess extends Command
                         $datetime,
                         $process->id
                     );
-                    $this->error("FAILED");
                     if($result['code'] == 429) {
                         $this->comment("API RATE LIMITED");
                         if ($retryAfter > 0) {
@@ -78,7 +78,7 @@ class RunProcess extends Command
                     } else {
                         $this->error("KILLING PROCESS");
                         $process->update([
-                            'status' => 'error',
+                            'status' => 'error api',
                             'pid' => 0
                         ]);
                         return 0;

@@ -16,7 +16,7 @@ class CreateProcessLogsTable extends Migration
     {
         Schema::create('process_logs', function (Blueprint $table) {
             $table->id();
-            $table->text('header')->nullable();
+            $table->text('headers')->nullable();
             $table->text('body')->nullable();
             $table->integer('total_limit')->default(0);
             $table->integer('total_left')->default(0);

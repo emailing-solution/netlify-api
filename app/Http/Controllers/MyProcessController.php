@@ -14,14 +14,9 @@ class MyProcessController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $processes = Process::with('user:id,username')
-                ->when(Gate::allows('is_mailer'), fn($q) => $q->where('user_id', auth()->id()))
-                ->select([
-                    'id', 'status', 'pid', 'split_by', 'delay_by',
-                    'total_sent', 'total_emails', 'account_id',
-                    'user_id', 'created_at', 'updated_at'
-                ]);
-            return datatables()->of($processes)->toJson();
+            $processes = Process::withCount('logs')->with('user:id,username')
+                ->when(Gate::allows('is_mailer'), fn($q) => $q->where('user_id', auth()->id()));
+            return datatables()->of($processes)->removeColumn('emails')->toJson();
         }
         return view('my_process');
     }
@@ -92,5 +87,14 @@ class MyProcessController extends Controller
         return response()->json([
             'status' => $result
         ]);
+    }
+
+    public function logs(Process $process, Request $request)
+    {
+        Gate::authorize('process_allowed', $process);
+        if ($request->ajax()) {
+            return datatables()->of($process->logs())->toJson();
+        }
+        return view('my_process_logs');
     }
 }
