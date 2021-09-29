@@ -51,6 +51,18 @@ class RunProcess extends Command
                 $toSend = $emails->map(fn($e) => ['email' => $e]);
                 $this->comment("Try Sending  : ". $toSend->count());
                 $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
+
+                $retryAfter = now()->diffInSeconds($result['reset_at'], false);
+                $datetime = now()->addSeconds($retryAfter);
+                ProcessLog::add(
+                    json_encode($result['headers']),
+                    $result['body'],
+                    (int)$result['limit'],
+                    (int)$result['left'],
+                    $datetime,
+                    $process->id
+                );
+
                 if($result['status']) {
                     $this->comment("Sent With Success ". $toSend->count());
                     $total = $total + $toSend->count();
@@ -58,16 +70,6 @@ class RunProcess extends Command
                     sleep($process->delay_by);
                 } else {
                     $this->error("FAILED");
-                    $retryAfter = now()->diffInSeconds($result['reset_at'], false);
-                    $datetime = now()->addSeconds($retryAfter);
-                    ProcessLog::add(
-                        json_encode($result['headers']),
-                        $result['body'],
-                        (int)$result['limit'],
-                        (int)$result['left'],
-                        $datetime,
-                        $process->id
-                    );
                     if($result['code'] == 429) {
                         $this->comment("API RATE LIMITED");
                         if ($retryAfter > 0) {

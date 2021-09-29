@@ -28,6 +28,15 @@
             return list;
         }
 
+        const IsJsonString = function (str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
+
         const buttons = [
             {
                 extend: "pageLength",
@@ -46,16 +55,21 @@
             {
                 title: "headers", data: "headers", className: "text-center", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
-                    const headers = JSON.parse(dataDecoded);
-                    console.log(headers);
-                    return jsonToHtml(headers);
+                    if(IsJsonString(dataDecoded)) {
+                        const headers = JSON.parse(dataDecoded);
+                        return jsonToHtml(headers);
+                    }
+                    return dataDecoded;
                 }
             },
             {
                 title: "body", data: "body", className: "text-center", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
-                    const headers = JSON.parse(dataDecoded);
-                    return jsonToHtml(headers);
+                    if(IsJsonString(dataDecoded)) {
+                        const headers = JSON.parse(dataDecoded);
+                        return jsonToHtml(headers);
+                    }
+                    return dataDecoded;
                 }
             },
             {title: "total limit", data: "total_limit", className: "text-center"},

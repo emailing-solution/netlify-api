@@ -60,7 +60,7 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    if (row.status !== 'finish')
+                    if (row.status !== 'finish' || !row.status.includes('error'))
                         return `<button data-id="${row.id}" class="btn btn-sm btn-danger kill">KILL</button>&nbsp;`;
                     return '';
                 }
