@@ -24,7 +24,6 @@ class SiteController extends Controller
     {
         Gate::authorize('account_allowed', $account);
         $netlify = new Netlify($account);
-
         $sites = $netlify->sites();
         if ($sites) {
             return response()->json($sites);

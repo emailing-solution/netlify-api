@@ -40,7 +40,6 @@
             {title: "total sent", data: "total_sent", className: "text-center"},
             {title: "total emails", data: "total_emails", className: "text-center"},
             {title: "status", data: "status", className: "text-center"},
-            {title: "pid", data: "pid", className: "text-center"},
             {title: "created at", data: "created_at", className: "text-center", render: function(data) {
                     return (new Date(data)).toLocaleString()
                 }

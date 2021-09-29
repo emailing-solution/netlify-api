@@ -6,7 +6,6 @@ use App\Libraries\Netlify;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 
 class AccountController extends Controller
@@ -50,7 +49,7 @@ class AccountController extends Controller
             $result['reset_at']->toDateTimeString()
         );
         return response()->json([
-            'status' => $result['status'] ? 'success' : 'failed',
+            'status' => $result['status'] ? 'success' : 'error',
             'body' => $body,
         ]);
 

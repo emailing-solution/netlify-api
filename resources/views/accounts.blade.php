@@ -57,10 +57,10 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    const check = `<button data-id="${row.id}" class="btn btn-sm btn-info check">CHECK API LIMIT</button>&nbsp;`;
+                    //const check = `<button data-id="${row.id}" class="btn btn-sm btn-info check">CHECK API LIMIT</button>&nbsp;`;
                     const status = `<button data-id="${row.id}" data-action="${!row.is_active ? 1 : 0}" class="btn btn-sm btn-warning status">${row.is_active ? 'DISABLE' : 'ENABLE'}</button>&nbsp;`;
                     const del = `<button data-id="${row.id}" class="btn btn-sm btn-danger del">DELETE</button>&nbsp;`;
-                    return check + status + del;
+                    return  status + del;
                 }
             },
         ];
