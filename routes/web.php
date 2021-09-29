@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('sites/{account}/{site}/{identity}', [SiteController::class, 'identityActions'])->name('sites.action');
 
     Route::get('my-process', [MyProcessController::class, 'index'])->name('process.index');
-    Route::get('my-process/logs/{account}', [MyProcessController::class, 'logs'])->name('process.logs');
+    Route::get('my-process/{process}/logs', [MyProcessController::class, 'logs'])->name('process.logs');
     Route::delete('my-process/kill/{process}', [MyProcessController::class, 'kill'])->name('process.kill');
     Route::get('my-process/create/{account}/{site}/{identity}', [MyProcessController::class, 'get'])->name('process.get');
     Route::post('my-process/create/{account}/{site}/{identity}', [MyProcessController::class, 'create'])->name('process.create');
