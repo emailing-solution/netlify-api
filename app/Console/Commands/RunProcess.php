@@ -80,7 +80,7 @@ class RunProcess extends Command
                     } else {
                         $this->error("KILLING PROCESS");
                         $process->update([
-                            'status' => 'error api',
+                            'status' => 'finish error api',
                             'pid' => 0
                         ]);
                         return 0;
