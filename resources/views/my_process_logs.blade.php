@@ -121,13 +121,15 @@
             {title: "#", data: "id", className: "text-center"},
             {
                 title: "headers", data: "headers", className: "text-center", render: function (data) {
-                    const headers = JSON.parse(data);
+                    const dataDecoded = $("<div/>").html(data).text();
+                    const headers = JSON.parse(dataDecoded);
                     return jsonToHtml(headers);
                 }
             },
             {
                 title: "body", data: "body", className: "text-center", render: function (data) {
-                    const headers = JSON.parse(data);
+                    const dataDecoded = $("<div/>").html(data).text();
+                    const headers = JSON.parse(dataDecoded);
                     return jsonToHtml(headers);
                 }
             },
