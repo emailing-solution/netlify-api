@@ -47,20 +47,24 @@ class RunProcess extends Command
             $total = $process->total_sent;
             $groupEmails = collect($process->emails)->chunk($process->split_by);
             $netlify = new Netlify($process->account);
+
             foreach ($groupEmails as $emails) {
                 $toSend = $emails->map(fn($e) => ['email' => $e]);
                 $this->comment("Try Sending  : ". $toSend->count());
+
                 $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
 
                 $retryAfter = now()->diffInSeconds($result['reset_at'], false);
                 $datetime = now()->addSeconds($retryAfter);
+
                 ProcessLog::add(
                     json_encode($result['headers']),
                     $result['body'],
                     (int)$result['limit'],
                     (int)$result['left'],
                     $datetime,
-                    $process->id
+                    $process->id,
+                    $result['code']
                 );
 
                 if($result['status']) {

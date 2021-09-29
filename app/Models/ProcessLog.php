@@ -28,9 +28,10 @@ class ProcessLog extends Model
         return $this->hasOne(Process::class)->latestOfMany();
     }
 
-    public static function add(string $headers, string $body, int $limit, int $left, Carbon $retry_at, int $process_id)
+    public static function add(string $headers, string $body, int $limit, int $left, Carbon $retry_at, int $process_id, string $code)
     {
         return self::create([
+            'code' => $code,
             'headers' => $headers,
             'body' => $body,
             'total_limit' => $limit,

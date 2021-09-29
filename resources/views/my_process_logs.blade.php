@@ -52,6 +52,7 @@
         ];
         const columns = [
             {title: "#", data: "id", className: "text-center"},
+            {title: "http code", data: "status_code", className: "text-center"},
             {
                 title: "headers", data: "headers", className: "text-center", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();

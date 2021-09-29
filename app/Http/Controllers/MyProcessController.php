@@ -63,7 +63,7 @@ class MyProcessController extends Controller
 
         $cmd = sprintf("nohup php %s process:run %s ", base_path('artisan'), $process->id);
         $pro = new BackgroundProcess($cmd);
-        $pro->run();
+        $pro->run(base_path(sprintf("storage/logs/logs_%s", $process->id)));
         if ($pro->isRunning()) {
             $process->update(['pid' => $pro->getPid()]);
             return response()->json([
