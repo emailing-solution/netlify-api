@@ -58,7 +58,7 @@ class RunProcess extends Command
                 } catch (ConnectionException $cnx) {
                     $this->error("TIMEOUT PROCESS");
                     $process->update([
-                        'status' => 'finish timeout proxy',
+                        'status' => 'finish connection timeout',
                         'pid' => 0
                     ]);
                     return 0;
