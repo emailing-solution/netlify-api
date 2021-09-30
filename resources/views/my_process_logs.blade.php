@@ -54,7 +54,7 @@
             {title: "#", data: "id", className: "text-center"},
             {title: "http code", data: "status_code", className: "text-center"},
             {
-                title: "headers", data: "headers", className: "text-center", render: function (data) {
+                title: "headers", data: "headers", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
                     if(IsJsonString(dataDecoded)) {
                         const headers = JSON.parse(dataDecoded);
@@ -64,7 +64,7 @@
                 }
             },
             {
-                title: "body", data: "body", className: "text-center", render: function (data) {
+                title: "body", data: "body", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
                     if(IsJsonString(dataDecoded)) {
                         const headers = JSON.parse(dataDecoded);
