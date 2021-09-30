@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\Account;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -12,17 +13,21 @@ class Netlify
     const API_URL = "https://api.netlify.com/api/v1";
 
     private Account $account;
+    private PendingRequest $http;
 
     public function __construct(Account $account)
     {
         $this->account = $account;
+        $this->http = Http::withToken($account->token)->timeout(10);
+        if(!empty($account->proxy)) {
+            $this->http->withOptions(['proxy' => $account->proxy])->withoutVerifying();
+        }
     }
 
     //get user information
     public function user()
     {
-        $request = Http::asJson()->withToken($this->account->token)
-            ->get(self::API_URL . "/user");
+        $request = $this->http->asJson()->get(self::API_URL . "/user");
         if ($request->successful()) {
             return $request->json();
         }
@@ -32,7 +37,7 @@ class Netlify
     //get accounts
     public function accounts(): array
     {
-        $request = Http::asJson()->withToken($this->account->token)
+        $request = $this->http->asJson()
             ->get(self::API_URL . "/accounts");
         return [
             'status' => $request->successful(),
@@ -46,8 +51,7 @@ class Netlify
     //get sites
     public function sites()
     {
-        $request = Http::asJson()->withToken($this->account->token)
-            ->get(sprintf("%s/sites", self::API_URL), [
+        $request = $this->http->asJson()->get(sprintf("%s/sites", self::API_URL), [
                 'sort_by' => 'updated_at',
                 'per_page' => 100
             ]);
@@ -60,8 +64,7 @@ class Netlify
     //get site
     public function site(string $site)
     {
-        $request = Http::asJson()->withToken($this->account->token)
-            ->get(sprintf("%s/sites/%s", self::API_URL, $site));
+        $request = $this->http->asJson()->get(sprintf("%s/sites/%s", self::API_URL, $site));
         if ($request->successful()) {
             return $request->json();
         }
@@ -71,7 +74,7 @@ class Netlify
     //get identity info
     public function identity(string $site, string $identity)
     {
-        $request = Http::asJson()->withToken($this->account->token)
+        $request = $this->http->asJson()
             ->get(sprintf("%s/sites/%s/identity/%s", self::API_URL, $site, $identity), [
                 'page' => 1,
                 'per_page' => 100
@@ -85,7 +88,7 @@ class Netlify
     //get user identity
     public function identityUsers(string $site, string $identity)
     {
-        $request = Http::asJson()->withToken($this->account->token)
+        $request = $this->http->asJson()
             ->get(sprintf("%s/sites/%s/identity/%s/users", self::API_URL, $site, $identity), [
                 'page' => 1,
                 'per_page' => 100
@@ -99,7 +102,7 @@ class Netlify
     // set invite identity params
     public function paramsIdentity(string $site, string $identity, string $subject = null, string $template = null): bool
     {
-        $request = Http::asForm()->withToken($this->account->token)
+        $request = $this->http->asForm()
             ->put(sprintf("%s/sites/%s/identity/%s", self::API_URL, $site, $identity), [
                 'subjects' => ['invite' => $subject],
                 'templates' => ['invite' => $template]
@@ -110,7 +113,7 @@ class Netlify
     //invite identity users
     public function inviteIdentity(string $site, string $identity, array $emails): array
     {
-        $request = Http::asJson()->withToken($this->account->token)
+        $request = $this->http->asJson()
             ->post(sprintf("%s/sites/%s/identity/%s/users/invite", self::API_URL, $site, $identity), [
                 'invites' => $emails
             ]);
@@ -133,7 +136,7 @@ class Netlify
     //delete invite user
     public function removeInviteIdentity(string $site, string $identity, string $userId): bool
     {
-        $request = Http::asJson()->withToken($this->account->token)
+        $request = $this->http->asJson()
             ->delete(sprintf("%s/sites/%s/identity/%s/users/%s", self::API_URL, $site, $identity, $userId));
         return $request->successful();
     }

@@ -36,8 +36,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('netlify', [AccountController::class, 'index'])->name('accounts.index');
-    Route::post('netlify/add', [AccountController::class, 'add'])->name('accounts.add');
+    Route::get('netlify/add/{account?}', [AccountController::class, 'load'])->name('accounts.load');
+    Route::post('netlify/add/{account?}', [AccountController::class, 'add'])->name('accounts.add');
     Route::get('netlify/check/{account}', [AccountController::class, 'check'])->name('accounts.check');
+    Route::get('netlify/proxy/{account}', [AccountController::class, 'proxy'])->name('accounts.proxy');
     Route::patch('netlify/status/{account}', [AccountController::class, 'status'])->name('accounts.status');
     Route::delete('netlify/delete/{account}', [AccountController::class, 'delete'])->name('accounts.delete');
 

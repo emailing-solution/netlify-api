@@ -6,6 +6,7 @@ use App\Libraries\Netlify;
 use App\Models\Process;
 use App\Models\ProcessLog;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -52,8 +53,16 @@ class RunProcess extends Command
                 $toSend = $emails->map(fn($e) => ['email' => $e]);
                 $this->comment("Try Sending  : ". $toSend->count());
 
-                $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
-
+                try {
+                    $result = $netlify->inviteIdentity($process->site_id, $process->identity_id, $toSend->toArray());
+                } catch (ConnectionException $cnx) {
+                    $this->error("TIMEOUT PROCESS");
+                    $process->update([
+                        'status' => 'finish timeout proxy',
+                        'pid' => 0
+                    ]);
+                    return 0;
+                }
                 $retryAfter = now()->diffInSeconds($result['reset_at'], false);
                 $datetime = now()->addSeconds($retryAfter);
 
