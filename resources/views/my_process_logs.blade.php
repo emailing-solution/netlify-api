@@ -20,9 +20,9 @@
 @section('script')
     <script>
         const jsonToHtml = function (json) {
-            let list =  '<ul>';
-            $.each(json, function(key, value) {
-                list+= `<li><strong>${key}: </strong>${JSON.stringify(value)}</li>`;
+            let list = '<ul>';
+            $.each(json, function (key, value) {
+                list += `<li><strong>${key}: </strong>${JSON.stringify(value)}</li>`;
             });
             list += '</ul>';
             return list;
@@ -56,7 +56,7 @@
             {
                 title: "headers", data: "headers", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
-                    if(IsJsonString(dataDecoded)) {
+                    if (IsJsonString(dataDecoded)) {
                         const headers = JSON.parse(dataDecoded);
                         return jsonToHtml(headers);
                     }
@@ -66,7 +66,7 @@
             {
                 title: "body", data: "body", render: function (data) {
                     const dataDecoded = $("<div/>").html(data).text();
-                    if(IsJsonString(dataDecoded)) {
+                    if (IsJsonString(dataDecoded)) {
                         const headers = JSON.parse(dataDecoded);
                         return jsonToHtml(headers);
                     }
