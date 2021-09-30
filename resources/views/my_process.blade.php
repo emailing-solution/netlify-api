@@ -60,9 +60,9 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    if (!row.status.includes('finish'))
-                        return `<button data-id="${row.id}" class="btn btn-sm btn-danger kill">KILL</button>&nbsp;`;
-                    return '';
+                    if (row.status.includes('finish') || row.status.includes('killed'))
+                        return '';
+                    return `<button data-id="${row.id}" class="btn btn-sm btn-danger kill">KILL</button>&nbsp;`;
                 }
             },
         ];
