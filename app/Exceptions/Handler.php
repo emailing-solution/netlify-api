@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
@@ -40,6 +41,14 @@ class Handler extends ExceptionHandler
             if($request->ajax()) {
                 return response()->json([
                     'error' => 'Api Request Timeout'
+                ], 400);
+            }
+        });
+
+        $this->renderable(function (RequestException $e, Request $request) {
+            if($request->ajax()) {
+                return response()->json([
+                    'error' => 'Api Request Could Not Resolve'
                 ], 400);
             }
         });

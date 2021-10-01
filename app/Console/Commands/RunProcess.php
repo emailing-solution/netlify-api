@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Libraries\Netlify;
 use App\Models\Process;
 use App\Models\ProcessLog;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Carbon;
@@ -59,6 +60,13 @@ class RunProcess extends Command
                     $this->error("TIMEOUT PROCESS");
                     $process->update([
                         'status' => 'finish connection timeout',
+                        'pid' => 0
+                    ]);
+                    return 0;
+                } catch (RequestException $cnx) {
+                    $this->error("Request Exception");
+                    $process->update([
+                        'status' => 'finish request exception',
                         'pid' => 0
                     ]);
                     return 0;

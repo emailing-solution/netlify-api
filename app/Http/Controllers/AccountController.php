@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Libraries\Netlify;
 use App\Models\Account;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -92,6 +93,11 @@ class AccountController extends Controller
                 return response()->json([
                     'status' => 'error',
                     'body' => 'Proxy Timeout Not Working'
+                ]);
+            } catch (RequestException $cnx) {
+                return response()->json([
+                    'status' => 'error',
+                    'body' => 'Request Exception'
                 ]);
             }
         }
