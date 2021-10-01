@@ -97,7 +97,7 @@ class AccountController extends Controller
             } catch (RequestException $cnx) {
                 return response()->json([
                     'status' => 'error',
-                    'body' => 'Request Exception'
+                    'body' => 'Request Could Not Resolve'
                 ]);
             }
         }
